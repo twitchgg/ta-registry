@@ -1,6 +1,8 @@
 BINARY := ta-registry
 BINARY_VERSION := v1.0.0
 BUILD_DIR := ./build
+RPC_DIR := ./pkg/proto
+OUT_DIR := ./pkg/pb
 
 .PHONY: clean-build clean-all
 
@@ -19,6 +21,15 @@ compile-linux: init
 		-o $(BUILD_DIR)/$(BINARY)-$(BINARY_VERSION)-linux-arm
 
 compile-all: compile-linux
+
+compile-proto: init clean-proto
+	for f in $$(ls $(RPC_DIR)/*.proto) ; do \
+	 	protoc --proto_path=. --go_out=$(OUT_DIR) \
+			--go-grpc_out=require_unimplemented_servers=false:$(OUT_DIR) $$f ;  \
+	done
+
+clean-proto:
+	rm -f $(OUT_DIR)/*.pb.go
 
 clean-build:
 	rm -rf $(BUILD_DIR)

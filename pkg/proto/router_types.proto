@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "cn.ac.ntsc.ta.proto";
+option java_outer_classname = "RouterTypesProto";
+option go_package = "./;pb";
+
+package ta.router.types;
+
+message RouterConfig {
+  repeated WireguardConfig wgConfig = 1;
+  repeated IPTablesRules iptablesRules = 2;
+  string dnsServer = 3;
+}
+
+message WireguardConfig {
+  string name = 1;
+  WireguardInterface interfaceDef = 2;
+  repeated WireguardPeer peers = 3;
+}
+
+message WireguardInterface {
+  string address = 1;
+  int32 port = 2;
+  string privKey = 3;
+}
+
+message WireguardPeer {
+  string name = 1;
+  string desc = 2;
+  string pubKey = 3;
+  string psKey = 4;
+  string endpoint = 5;
+  repeated string allowIPs = 6;
+  int32 keepalive = 7;
+}
+
+message IPTablesRules {
+  repeated string masqueraedInterfaces = 1;
+  bool whiteList = 2;
+}
