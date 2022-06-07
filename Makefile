@@ -1,4 +1,4 @@
-BINARY := cv-agent
+BINARY := ta-registry
 BINARY_VERSION := v1.0.0
 BUILD_DIR := ./build
 
@@ -18,13 +18,7 @@ compile-linux: init
 	GOOS=linux GOARCH=arm CGO_ENABLED=0 go build -ldflags '-s -w' \
 		-o $(BUILD_DIR)/$(BINARY)-$(BINARY_VERSION)-linux-arm
 
-compile-windows: init
-	GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -ldflags '-s -w' \
-		-o $(BUILD_DIR)/$(BINARY)-$(BINARY_VERSION)-windows-amd64.exe 
-	GOOS=windows GOARCH=386 CGO_ENABLED=0 go build -ldflags '-s -w' \
-		-o $(BUILD_DIR)/$(BINARY)-$(BINARY_VERSION)-windows-x86.exe 
-
-compile-all: compile-linux compile-windows
+compile-all: compile-linux
 
 clean-build:
 	rm -rf $(BUILD_DIR)
