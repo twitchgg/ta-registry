@@ -7,7 +7,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	prefixed "github.com/x-cray/logrus-prefixed-formatter"
+	ccmd "ntsc.ac.cn/ta-registry/pkg/cmd"
 )
 
 var envs struct {
@@ -23,13 +23,15 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	logrus.SetOutput(os.Stdout)
-	logrus.SetLevel(logrus.DebugLevel)
-	formatter := new(prefixed.TextFormatter)
-	logrus.SetFormatter(formatter)
 	cobra.OnInitialize(func() {})
 	viper.AutomaticEnv()
 	viper.SetEnvPrefix("TA")
+	rootCmd.Flags().StringVar(&ccmd.GlobalEnvs.LoggerLevel,
+		"logger-level", "DEBUG", "logger level")
+	rootCmd.Flags().StringVar(&envs.listener,
+		"rpc-listener", "tcp://0.0.0.0:1358", "grpc listener url")
+	rootCmd.Flags().StringVar(&envs.certPath,
+		"cert-path", "/etc/ntsc/ta/registry/certs", "system certificates path")
 }
 
 func Execute() {
@@ -40,7 +42,16 @@ func Execute() {
 }
 
 func prerun(cmd *cobra.Command, args []string) {
-
+	ccmd.InitGlobalVars()
+	var err error
+	if err = ccmd.ValidateStringVar(&envs.certPath, "cert_path", true); err != nil {
+		logrus.WithField("prefix", "cmd.root").
+			Fatalf("check boot var failed: %s", err.Error())
+	}
+	if err = ccmd.ValidateStringVar(&envs.listener, "rpc_listener", true); err != nil {
+		logrus.WithField("prefix", "cmd.root").
+			Fatalf("check boot var failed: %s", err.Error())
+	}
 }
 
 func run(cmd *cobra.Command, args []string) {

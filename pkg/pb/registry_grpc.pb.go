@@ -18,6 +18,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RegistryServiceClient interface {
+	// RegistRouter regist wireguard router
 	RegistRouter(ctx context.Context, in *RegistRouterRequest, opts ...grpc.CallOption) (*RouterConfig, error)
 }
 
@@ -42,6 +43,7 @@ func (c *registryServiceClient) RegistRouter(ctx context.Context, in *RegistRout
 // All implementations should embed UnimplementedRegistryServiceServer
 // for forward compatibility
 type RegistryServiceServer interface {
+	// RegistRouter regist wireguard router
 	RegistRouter(context.Context, *RegistRouterRequest) (*RouterConfig, error)
 }
 
