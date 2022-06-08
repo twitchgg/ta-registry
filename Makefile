@@ -20,7 +20,7 @@ compile-linux: init
 	GOOS=linux GOARCH=arm CGO_ENABLED=0 go build -ldflags '-s -w' \
 		-o $(BUILD_DIR)/$(BINARY)-$(BINARY_VERSION)-linux-arm
 
-compile-all: compile-linux
+compile-all: compile-proto compile-linux
 
 compile-proto: init clean-proto
 	for f in $$(ls $(RPC_DIR)/*.proto) ; do \
