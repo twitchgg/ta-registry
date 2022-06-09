@@ -146,6 +146,9 @@ func GenerateError(code codes.Code, err error) error {
 
 // GetClientCertificate get client certificate
 func GetClientCertificate(pr *peer.Peer) (*x509.Certificate, error) {
+	if pr == nil {
+		return nil, fmt.Errorf("peer is nil")
+	}
 	switch info := pr.AuthInfo.(type) {
 	case credentials.TLSInfo:
 		if len(info.State.PeerCertificates) == 0 {

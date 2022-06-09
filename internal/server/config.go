@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"net"
 	"net/url"
+	"path/filepath"
+	"strings"
 
 	"ntsc.ac.cn/ta-registry/pkg/rpc"
 )
@@ -17,8 +19,11 @@ const (
 
 // RegistryServerConfig registry server config
 type RegistryServerConfig struct {
-	Listener string
-	CertPath string
+	Listener        string
+	CertPath        string
+	EtcdEndpoints   string
+	LocalDBPath     string
+	ManagerEndpoint string
 }
 
 // Check check registry server config
@@ -36,17 +41,20 @@ func (c *RegistryServerConfig) Check() error {
 	if uri.Port() == "" {
 		return fmt.Errorf("listener port not define")
 	}
-	if _, err := net.ResolveIPAddr(uri.Scheme, uri.Host); err != nil {
+	if _, err := net.ResolveTCPAddr(uri.Scheme, uri.Host); err != nil {
 		return fmt.Errorf("parse listener addr failed: %s", err.Error())
+	}
+	if c.LocalDBPath == "" && c.ManagerEndpoint == "" {
+		return fmt.Errorf("local manager database path or remote manager endpoint not define")
 	}
 	return nil
 }
 
 // RPCConfig get grpc config
 func (c *RegistryServerConfig) RPCConfig() (*rpc.ServerConfig, error) {
-	trustedPath := c.CertPath + "/" + TRUSTED_CERT_CHAIN_NAME
-	certPath := c.CertPath + "/" + SERVER_CERT_NAME
-	privKeyPath := c.CertPath + "/" + SERVER_PRIVATE_KEY_NAME
+	trustedPath := c.CertPath + string(filepath.Separator) + TRUSTED_CERT_CHAIN_NAME
+	certPath := c.CertPath + string(filepath.Separator) + SERVER_CERT_NAME
+	privKeyPath := c.CertPath + string(filepath.Separator) + SERVER_PRIVATE_KEY_NAME
 	var trusted, cert, privKey []byte
 	var err error
 	if trusted, err = ioutil.ReadFile(trustedPath); err != nil {
@@ -66,4 +74,9 @@ func (c *RegistryServerConfig) RPCConfig() (*rpc.ServerConfig, error) {
 		RequireAndVerify: true,
 		BindAddr:         uri.Host,
 	}, nil
+}
+
+// EtcdEndpoints get etcd endpoints
+func (c *RegistryServerConfig) GetEtcdEndpoints() []string {
+	return strings.Split(c.EtcdEndpoints, ",")
 }
