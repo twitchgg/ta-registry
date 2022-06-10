@@ -12,11 +12,13 @@ message RouterConfig {
   // wgConfig wireguard config
   repeated WireguardConfig wgConfig = 1;
   // iptablesRules iptables rules config
-  repeated IPTablesRules iptablesRules = 2;
+  IPTablesRules iptablesRules = 2;
   // dnsServer DNS server (query TA service)
-  string dnsServer = 3;
-  // ethInfos ethernet cards config
-  repeated EthernetCard ethInfos = 4;
+  repeated string dnsServer = 3;
+  // wanInfo wan interface info
+  EthernetCard wanInfo = 4;
+  // LanInfos lan interfaces config
+  repeated EthernetCard LanInfos = 5;
 }
 
 // WireguardConfig wireguard all config
@@ -51,10 +53,12 @@ message WireguardPeer {
   string psKey = 4;
   // endpoint wireguard server address and port (port default 51820)
   string endpoint = 5;
+  // peerAddr peer address
+  string peerAddr = 6;
   // allowIPs peer allow ips (iptables rules)
-  repeated string allowIPs = 6;
+  repeated string allowIPs = 7;
   // keepalive connection keepalive time (second)
-  int32 keepalive = 7;
+  int32 keepalive = 8;
 }
 
 // IPTablesRules iptables rules config
@@ -70,11 +74,9 @@ message EthernetCard {
   // name ethernet card name
   string name = 1;
   // address ipv4/netmask
-  string address = 2;
+  repeated string addresses = 2;
   // gateway ipv4 gateway address
   string gateway = 3;
-  // dns dns server
-  string dns = 4;
   // dhcpClient dhcp client application name (if need)
-  string dhcpClient = 5;
+  string dhcpClient = 4;
 }

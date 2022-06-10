@@ -80,17 +80,3 @@ func (s *RegistryServer) certCheckFunc(ctx context.Context) (context.Context, er
 			cert.Subject.CommonName, cert.Issuer.CommonName)
 	return ctx, nil
 }
-
-func (s *RegistryServer) getCertExtValue(ctx context.Context, key string) (string, error) {
-	pr, _ := peer.FromContext(ctx)
-	cert, err := rpc.GetClientCertificate(pr)
-	if err != nil {
-		return "", fmt.Errorf("get client certificate failed: %s", err.Error())
-	}
-	for _, v := range cert.Extensions {
-		if v.Id.String() == key {
-			return string(v.Value), nil
-		}
-	}
-	return "", fmt.Errorf("not found extension [%s]", key)
-}

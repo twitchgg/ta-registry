@@ -11,6 +11,7 @@ import (
 	"encoding/asn1"
 	"encoding/pem"
 	"errors"
+	"fmt"
 	"math/big"
 	"time"
 
@@ -196,4 +197,14 @@ func DataToPEM(data []byte, name string) ([]byte, error) {
 		return nil, err
 	}
 	return printBuf.Bytes(), nil
+}
+
+// GetCertExtValue get certificate extension value
+func GetCertExtValue(cert *x509.Certificate, key string) (string, error) {
+	for _, v := range cert.Extensions {
+		if v.Id.String() == key {
+			return string(v.Value), nil
+		}
+	}
+	return "", fmt.Errorf("not found extension [%s]", key)
 }
