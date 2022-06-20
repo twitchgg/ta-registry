@@ -7,9 +7,14 @@ option go_package = "./;pb";
 
 import "pkg/proto/registry_types.proto";
 import "pkg/proto/router_types.proto";
+import "pkg/proto/server_types.proto";
 
 service RegistryService {
   // RegistRouter regist wireguard router
   rpc RegistRouter(ta.registry.types.RegistRouterRequest)
       returns (ta.router.types.RouterConfig) {}
+
+  // RegistServer regist server
+  rpc RegistServer(ta.registry.types.RegistServerRequest)
+      returns (ta.server.types.ServerConfig) {}
 }

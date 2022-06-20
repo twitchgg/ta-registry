@@ -13,3 +13,8 @@ message RegistRouterRequest {
   google.protobuf.Timestamp sysTime = 1;
   string machineID = 2;
 }
+
+message RegistServerRequest {
+  google.protobuf.Timestamp sysTime = 1;
+  string machineID = 2;
+}
