@@ -5,11 +5,12 @@ import (
 
 	"github.com/sirupsen/logrus"
 	"ntsc.ac.cn/ta-registry/pkg/pb"
+	"ntsc.ac.cn/ta-registry/pkg/rpc"
 )
 
 func (s *RegistryServer) RegistServer(ctx context.Context,
 	req *pb.RegistServerRequest) (*pb.ServerConfig, error) {
-	if err := s.checkMachineID(ctx, req.MachineID); err != nil {
+	if err := rpc.CheckMachineID(ctx, req.MachineID); err != nil {
 		return nil, err
 	}
 	if logrus.IsLevelEnabled(logrus.TraceLevel) {

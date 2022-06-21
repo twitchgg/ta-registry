@@ -5,12 +5,13 @@ import (
 
 	"github.com/sirupsen/logrus"
 	"ntsc.ac.cn/ta-registry/pkg/pb"
+	"ntsc.ac.cn/ta-registry/pkg/rpc"
 )
 
 // RegistRouter regist wireguard router
 func (s *RegistryServer) RegistRouter(ctx context.Context,
 	req *pb.RegistRouterRequest) (*pb.RouterConfig, error) {
-	if err := s.checkMachineID(ctx, req.MachineID); err != nil {
+	if err := rpc.CheckMachineID(ctx, req.MachineID); err != nil {
 		return nil, err
 	}
 	if logrus.IsLevelEnabled(logrus.TraceLevel) {

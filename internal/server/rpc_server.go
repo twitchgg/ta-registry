@@ -32,9 +32,9 @@ func NewRegistryServer(conf *RegistryServerConfig) (*RegistryServer, error) {
 	}
 	rpcServ, err := rpc.NewServer(rpcConf, []grpc.ServerOption{
 		grpc.StreamInterceptor(
-			rpc.StreamServerInterceptor(server.certCheckFunc)),
+			rpc.StreamServerInterceptor(rpc.CertCheckFunc)),
 		grpc.UnaryInterceptor(
-			rpc.UnaryServerInterceptor(server.certCheckFunc)),
+			rpc.UnaryServerInterceptor(rpc.CertCheckFunc)),
 	}, func(g *grpc.Server) {
 		pb.RegisterRegistryServiceServer(g, &server)
 	})
