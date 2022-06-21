@@ -10,6 +10,7 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/keepalive"
+	"ntsc.ac.cn/ta-registry/pkg/secure"
 )
 
 var kacp = keepalive.ClientParameters{
@@ -147,7 +148,7 @@ func NewClientTLSConfig(conf *ClientTLSConfig) (
 			InsecureSkipVerify: true,
 		}, nil
 	}
-	certificate, certPool, err := NewTLSCerts(
+	certificate, certPool, err := secure.NewTLSCerts(
 		conf.CACert, conf.Cert, conf.PrivKey)
 	if err != nil {
 		return nil, err

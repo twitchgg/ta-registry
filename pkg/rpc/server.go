@@ -37,7 +37,8 @@ type Server struct {
 }
 
 // NewServer create gRPC server with server config
-func NewServer(conf *ServerConfig, opts []grpc.ServerOption, registry func(*grpc.Server)) (*Server, error) {
+func NewServer(conf *ServerConfig, opts []grpc.ServerOption,
+	registry func(*grpc.Server)) (*Server, error) {
 	if conf == nil {
 		return nil, fmt.Errorf("rpc server config is not define")
 	}

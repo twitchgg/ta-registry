@@ -2,13 +2,12 @@ package rpc
 
 import (
 	"crypto/tls"
-	"crypto/x509"
 	"fmt"
 	"net"
 
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc/credentials"
-	auth "ntsc.ac.cn/ta-registry/pkg/secure"
+	"ntsc.ac.cn/ta-registry/pkg/secure"
 )
 
 // ServerConfig gRPC server config
@@ -68,7 +67,7 @@ func (conf *ServerConfig) Check() (bool, error) {
 
 // NewTLSCreds create gRPC TLS credentials
 func (conf *ServerConfig) NewTLSCreds() (credentials.TransportCredentials, error) {
-	certificate, certPool, err := NewTLSCerts(
+	certificate, certPool, err := secure.NewTLSCerts(
 		conf.TrustedCert, conf.ServerCert, conf.ServerPrivKey)
 	if err != nil {
 		return nil, err
@@ -90,18 +89,4 @@ func (conf *ServerConfig) NewTLSCreds() (credentials.TransportCredentials, error
 		tlsConf.ClientAuth = tls.RequireAndVerifyClientCert
 	}
 	return credentials.NewTLS(tlsConf), nil
-}
-
-// NewTLSCerts create TLS x509 certificates
-func NewTLSCerts(certCA, cert, privKey []byte) (
-	tls.Certificate, *x509.CertPool, error) {
-	certificate, err := tls.X509KeyPair(cert, privKey)
-	if err != nil {
-		return tls.Certificate{}, nil, err
-	}
-	certPool, err := auth.DecodeCertificateChainPool(certCA)
-	if err != nil {
-		return tls.Certificate{}, nil, err
-	}
-	return certificate, certPool, nil
 }
