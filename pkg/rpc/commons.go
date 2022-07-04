@@ -5,6 +5,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	"io/ioutil"
+	"net/url"
 	"path/filepath"
 
 	"github.com/sirupsen/logrus"
@@ -21,6 +22,8 @@ const (
 	TRUSTED_CERT_CHAIN_NAME = "trusted.crt"
 	CLIENT_CERT_NAME        = "client.crt"
 	CLIENT_PRIVATE_KEY_NAME = "client.key"
+	SERVER_CERT_NAME        = "server.crt"
+	SERVER_PRIVATE_KEY_NAME = "server.key"
 )
 
 func CertCheckFunc(ctx context.Context) (context.Context, error) {
@@ -102,4 +105,30 @@ func GetTlsConfig(machineID string, path string, servername string) (*tls.Config
 		return nil, fmt.Errorf("generate tls config failed: %v", err)
 	}
 	return tlsConf, nil
+}
+
+// GenServerRPCConfig generate server config
+func GenServerRPCConfig(path, listener string) (*ServerConfig, error) {
+	trustedPath := path + string(filepath.Separator) + TRUSTED_CERT_CHAIN_NAME
+	certPath := path + string(filepath.Separator) + SERVER_CERT_NAME
+	privKeyPath := path + string(filepath.Separator) + SERVER_PRIVATE_KEY_NAME
+	var trusted, cert, privKey []byte
+	var err error
+	if trusted, err = ioutil.ReadFile(trustedPath); err != nil {
+		return nil, fmt.Errorf("read trusted certificate chain failed: %s", err.Error())
+	}
+	if cert, err = ioutil.ReadFile(certPath); err != nil {
+		return nil, fmt.Errorf("read server certificate failed: %s", err.Error())
+	}
+	if privKey, err = ioutil.ReadFile(privKeyPath); err != nil {
+		return nil, fmt.Errorf("read server private key failed: %s", err.Error())
+	}
+	uri, _ := url.Parse(listener)
+	return &ServerConfig{
+		TrustedCert:      trusted,
+		ServerCert:       cert,
+		ServerPrivKey:    privKey,
+		RequireAndVerify: true,
+		BindAddr:         uri.Host,
+	}, nil
 }
