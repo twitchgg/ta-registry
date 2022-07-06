@@ -22,7 +22,7 @@ compile-linux: init
 
 compile-all: compile-proto compile-linux
 
-compile-proto: init clean-proto
+compile-proto: clean-proto
 	for f in $$(ls $(RPC_DIR)/*.proto) ; do \
 	 	protoc --proto_path=. --go_out=$(OUT_DIR) \
 			--go-grpc_out=require_unimplemented_servers=false:$(OUT_DIR) $$f ;  \
