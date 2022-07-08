@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/keepalive"
 	"ntsc.ac.cn/ta-registry/pkg/secure"
 )
@@ -39,7 +40,7 @@ func NewClientConn(conn net.Conn) *ClientConn {
 func DialRPCConn(dialOpts *DialOptions) (*grpc.ClientConn, error) {
 	opts := []grpc.DialOption{
 		grpc.WithKeepaliveParams(kacp),
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithContextDialer(func(ctx context.Context, remote string) (net.Conn, error) {
 			info, err := url.Parse(remote)
 			if err != nil {
