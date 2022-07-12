@@ -5,7 +5,10 @@ option java_package = "cn.ac.ntsc.ta.proto";
 option java_outer_classname = "HealthCheckProto";
 option go_package = "./;pb";
 
-message HealthCheckRequest { string service = 1; }
+message HealthCheckRequest {
+  string service = 1;
+  string machineID = 2;
+}
 
 message HealthCheckResponse {
   enum ServingStatus {

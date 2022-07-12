@@ -9,10 +9,6 @@ service CommonViewDataService {
   rpc PushMainStationData(PushRequest) returns (stream CommonViewRawData);
 }
 
-message PushRequest {
-  string machineID = 1;
-}
+message PushRequest { string machineID = 1; }
 
-message CommonViewRawData {
-  bytes data = 1;
-}
+message CommonViewRawData { bytes data = 1; }

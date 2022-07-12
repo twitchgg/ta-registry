@@ -58,6 +58,22 @@ func CheckMachineID(ctx context.Context, reqMachineID string) error {
 	return nil
 }
 
+func GetMachineID(ctx context.Context) (string, error) {
+	pr, _ := peer.FromContext(ctx)
+	cert, err := GetClientCertificate(pr)
+	if err != nil {
+		return "", fmt.Errorf(
+			"get client certificate failed: %s", err.Error())
+	}
+	machineID, err := secure.GetCertExtValue(
+		cert, CERT_EXT_KEY_MACHINE_ID)
+	if err != nil {
+		return "", GenerateError(codes.InvalidArgument,
+			fmt.Errorf("not found machine id from certificate"))
+	}
+	return machineID, nil
+}
+
 // GetTlsConfig get grpc service tls config
 func GetTlsConfig(machineID string, path string, servername string) (*tls.Config, error) {
 	certPath, err := filepath.Abs(path)
@@ -123,7 +139,11 @@ func GenServerRPCConfig(path, listener string) (*ServerConfig, error) {
 	if privKey, err = ioutil.ReadFile(privKeyPath); err != nil {
 		return nil, fmt.Errorf("read server private key failed: %s", err.Error())
 	}
-	uri, _ := url.Parse(listener)
+	uri, err := url.Parse(listener)
+	if err != nil {
+		return nil, fmt.Errorf(
+			"failed to parse listener [%s]: %v", listener, err)
+	}
 	return &ServerConfig{
 		TrustedCert:      trusted,
 		ServerCert:       cert,
