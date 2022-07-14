@@ -11,8 +11,8 @@ import (
 	"github.com/denisbrodbeck/machineid"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"google.golang.org/protobuf/types/known/timestamppb"
-	"ntsc.ac.cn/ta-registry/pkg/pb"
-	"ntsc.ac.cn/ta-registry/pkg/rpc"
+	"ntsc.ac.cn/tas/tas-commons/pkg/pb"
+	"ntsc.ac.cn/tas/tas-commons/pkg/rpc"
 )
 
 func tc(t *testing.T) pb.RegistryServiceClient {

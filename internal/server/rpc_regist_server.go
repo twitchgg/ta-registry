@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/sirupsen/logrus"
-	"ntsc.ac.cn/ta-registry/pkg/pb"
-	"ntsc.ac.cn/ta-registry/pkg/rpc"
+	"ntsc.ac.cn/tas/tas-commons/pkg/pb"
+	"ntsc.ac.cn/tas/tas-commons/pkg/rpc"
 )
 
 func (s *RegistryServer) RegistServer(ctx context.Context,

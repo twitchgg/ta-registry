@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"ntsc.ac.cn/ta-registry/pkg/rpc"
+	"ntsc.ac.cn/tas/tas-commons/pkg/rpc"
 )
 
 const (

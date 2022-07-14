@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	registry "ntsc.ac.cn/ta-registry/internal/server"
-	ccmd "ntsc.ac.cn/ta-registry/pkg/cmd"
+	ccmd "ntsc.ac.cn/tas/tas-commons/pkg/cmd"
 )
 
 var envs struct {
